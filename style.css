@@ -1,8 +1,13 @@
-html, body {
-    margin: 0;
-    padding: 0;
-  }
-  canvas {
-    display: block;
-  }
-  
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+canvas {
+	display: block;
+}
+
+button {
+	font-size: calc(50px + 1.5vw);
+	padding: 5px;
+}
