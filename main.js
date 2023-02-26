@@ -37,7 +37,7 @@ function connectToBle() {
 }
 
 function disconnectToBle() {
-	writeToBle("S");
+	send("Sx");
 	// Disonnect to the device
 	myBLE.disconnect();
 	// Check if myBLE is connected
@@ -53,9 +53,7 @@ function gotCharacteristics(error, characteristics) {
 }
 
 function send(v) {
-	const inputValue = v;
-	// Write the value of the input to the myCharacteristic
-	myBLE.write(myCharacteristic, inputValue);
+	myBLE.write(myCharacteristic, v);
 }
 
 let origin;
@@ -84,13 +82,27 @@ function draw() {
 	}
 	circle(origin.x + pos.x, origin.y + pos.y, radius);
 
-	if (myCharacteristic) {
-		send(
-			str(round((pos.x / radius) * 10)) +
-				"," +
-				str(round((-pos.y / radius) * 10)) +
-				"x"
-		);
+	if (myBLE.isConnected()) {
+		let angle = j.angleBetween(pos);
+		console.log(origin.dist(pos), radius, origin.dist(pos) / radius);
+		let t = str(round((origin.dist(pos) / radius / 2) * 100)).padStart(3, "0");
+		if (angle > -150 && angle < -30) {
+			t += "F";
+		}
+		if (angle > 30 && angle < 150) {
+			t += "B";
+		}
+		if (angle > 120 || angle < -120) {
+			t += "L";
+		}
+		if (angle > -60 && angle < 60) {
+			t += "R";
+		}
+		if (!dragging) {
+			send("Sx");
+		} else {
+			send(t + "x");
+		}
 	}
 }
 function windowResized() {
